@@ -7,7 +7,7 @@ namespace TurnUpPortalSpecFlowDemo.Pages
 {
     public class TimeMaterialPage
     {
-        public void CreateTimeRecord(IWebDriver driver, string code, string description, String price)
+        public void CreateTimeRecord(IWebDriver driver, String code, String typeCode, String description, String price)
         {
             // Click on create new button
             IWebElement createNewButton = driver.FindElement(By.XPath("//*[@id=\"container\"]/p/a"));
@@ -43,7 +43,7 @@ namespace TurnUpPortalSpecFlowDemo.Pages
 
         }
 
-        public void AssertCreateTimeRecord(IWebDriver driver, String code)
+        public void AssertCreateTimeRecord(IWebDriver driver, String code, String typeCode, String description, String price)
         {
             // Check if new Time record has been created successfully
 
@@ -55,7 +55,7 @@ namespace TurnUpPortalSpecFlowDemo.Pages
             Assert.That(newCode.Text == code, "New time record has not been created. Test failed!");
         }
 
-        public void EditTimeRecord(IWebDriver driver, String oldCode, String newCode)
+        public void EditTimeRecord(IWebDriver driver, String oldCode, String oldTypeCode, String oldDescription, String oldPrice, String newCode, String newTypeCode, String newDescription, String newPrice)
         {
             Thread.Sleep(4000);
             //Select a record and click edit button
@@ -107,7 +107,7 @@ namespace TurnUpPortalSpecFlowDemo.Pages
             Thread.Sleep(1500);
         }
 
-        public void AssertEditTimeRecord(IWebDriver driver, String newCode)
+        public void AssertEditTimeRecord(IWebDriver driver, String newCode, String newTypeCode, String newDescription, String newPrice)
         {
             // Check if new Time record has been created successfully
 
@@ -129,16 +129,9 @@ namespace TurnUpPortalSpecFlowDemo.Pages
 
             IWebElement recordToBeDeleted = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
 
-            if (recordToBeDeleted.Text == code)
-            {
-                //Click on delete button on a selected record
-                IWebElement deleteButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[5]/a[2]"));
-                deleteButton.Click();
-            }
-            else
-            {
-                Assert.Fail("Record to deleted has not been found.");
-            }
+            //Click on delete button on a selected record
+            IWebElement deleteButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[5]/a[2]"));
+            deleteButton.Click();
 
             Thread.Sleep(1500);
 
@@ -153,15 +146,21 @@ namespace TurnUpPortalSpecFlowDemo.Pages
 
         }
 
-        public void AssertDeleteTimeRecord(IWebDriver driver, String code)
+        public void AssertDeleteTimeRecord(IWebDriver driver, String code, String typeCode, String description, String price)
         {
             //Check if the record is deleted
             IWebElement lPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
             lPageButton.Click();
 
             IWebElement deletedCode = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
+            IWebElement updatedTypeCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
+            IWebElement updatedDescription = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
+            IWebElement updatedPrice = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
 
             Assert.That(deletedCode.Text != code, "Record hasn't been deleted successfully. Test Failed");
+            Assert.That(updatedTypeCode.Text != typeCode, "  Material record hasn't been deleted");
+            Assert.That(updatedDescription.Text != description, "Record hasn't been deleted successfully. Test Failed");
+            Assert.That(!updatedPrice.Text.Contains(price), "  Material record hasn't been deleted");
         }
     }
 }

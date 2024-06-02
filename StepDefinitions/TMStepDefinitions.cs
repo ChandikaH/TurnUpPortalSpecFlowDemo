@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Diagnostics;
+using System.Reflection.Emit;
 using TurnUpPortalSpecFlowDemo.Pages;
 using TurnUpPortalSpecFlowDemo.Utilities;
 
@@ -20,54 +22,52 @@ namespace TurnupPortalSpecFlow.StepDefinitions
             webDriver = new ChromeDriver();
         }
 
-        [Given(@"I log into Turnup portal")]
-        public void GivenILogIntoTurnupPortal()
+        [Given(@"I logged into turnup portal successfully")]
+        public void GivenILoggedIntoTurnupPortalSuccessfully()
         {
             loginPageObject.LoginActions(webDriver, "hari", "123123");
         }
 
-        [When(@"I navigate to Time and Material page")]
+        [When(@"I navigate to time and material page")]
         public void WhenINavigateToTimeAndMaterialPage()
         {
             homePageObject.NavigateToTimeMaterialPage(webDriver);
         }
 
-        [When(@"I create a new Time and Material record '([^']*)' '([^']*)' '([^']*)'")]
-        public void WhenICreateANewTimeAndMaterialRecord(String code, String description, String price)
+        [When(@"I create a new time and material record ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)""")]
+        public void WhenICreateANewTimeAndMaterialRecord(String code, String typeCode, String description, String price)
         {
-            tmPageObject.CreateTimeRecord(webDriver, code, description, price);
-
+            tmPageObject.CreateTimeRecord(webDriver, code, typeCode, description, price);
         }
 
-        [Then(@"the record should be saved '([^']*)'")]
-        public void ThenTheRecordShouldBeSaved(String code)
+        [Then(@"The record should be created successfully ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)""")]
+        public void ThenTheRecordShouldBeCreatedSuccessfully(String code, String typeCode, String description, String price)
         {
-            tmPageObject.AssertCreateTimeRecord(webDriver, code);
-            webDriver.Quit();
+            tmPageObject.AssertCreateTimeRecord(webDriver, code, typeCode, description, price);
         }
 
-        [When(@"I edit an existing Time and Material record '([^']*)' '([^']*)'")]
-        public void WhenIEditANewTimeAndMaterialRecord(string oldCode, String newCode)
+        [When(@"I edit an existing time and material record ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)""")]
+        public void WhenIEditAnExistingTimeAndMaterialRecord(String oldCode, String oldTypeCode, String oldDescription, String oldPrice, String newCode, String newTypeCode, String newDescription, String newPrice)
         {
-            tmPageObject.EditTimeRecord(webDriver, oldCode, newCode);
+            tmPageObject.EditTimeRecord(webDriver, oldCode, oldTypeCode, oldDescription, oldPrice, newCode, newTypeCode, newDescription, newPrice);
         }
 
-        [Then(@"the record should be updated '([^']*)'")]
-        public void ThenTheRecordShouldBeUpdated(string newCode)
+        [Then(@"The record should be updated successfully ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)""")]
+        public void ThenTheRecordShouldBeUpdatedSuccessfully(String newCode, String newTypeCode, String newDescription, String newPrice)
         {
-            tmPageObject.AssertEditTimeRecord(webDriver, newCode);
+            tmPageObject.AssertEditTimeRecord(webDriver, newCode, newTypeCode, newDescription, newPrice);
         }
 
-        [When(@"I delete an existing Time and Material record '([^']*)'")]
-        public void WhenIDeleteAnExistingTimeAndMaterialRecord(string code)
+        [When(@"I delete an existing time and material record '([^']*)'")]
+        public void WhenIDeleteAnExistingTimeAndMaterialRecord(String code)
         {
             tmPageObject.DeleteTimeRecord(webDriver, code);
         }
 
-        [Then(@"the record should be deleted '([^']*)'")]
-        public void ThenTheRecordShouldBeDeleted(string code)
+        [Then(@"The record should be deleted successfully ""([^""]*)"" ""([^""]*)"" ""([^""]*)"" ""([^""]*)""")]
+        public void ThenTheRecordShouldBeDeletedSuccessfully(String code, String typeCode, String description, String price)
         {
-            tmPageObject.AssertDeleteTimeRecord(webDriver, code);
+            tmPageObject.AssertDeleteTimeRecord(webDriver, code, typeCode, description, price);
         }
 
         [AfterScenario]
